@@ -83,14 +83,7 @@
           };
           propagatedBuildInputs = [prev.rPackages.mvtnorm];
         };
-        # Template for adding more packages:
-        # somepkg = mkGitR {
-        #   pname = "somepkg";
-        #   src = somepkg;          # from inputs (add it above)
-        #   subdir = ".";           # change if the R pkg is in a subfolder
-        #   propagatedBuildInputs = with final.rPackages; [ <deps> ];
-        #   buildInputs = [ <system-libs-if-needed> ];
-        # };
+        
       };
     };
   in {
