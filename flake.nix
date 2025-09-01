@@ -2,7 +2,7 @@
   description = "FRAN - The Flakey R Archiving Network";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:rstats-on-nix/nixpkgs/r-daily";
     nvimcom = {
       url = "github:R-nvim/R.nvim";
       flake = false;
@@ -31,25 +31,7 @@
     overlay = final: prev: let
     in {
       extraRPackages = {
-        musicMetadata = prev.rPackages.buildRPackage {
-          name = "musicMetadata";
-          src = prev.fetchgit {
-            url = "https://github.com/hannesdatta/musicMetadata";
-            branchName = "master";
-            rev = "1b7ca4c1fd208475e961b77edc90ad513b936879";
-            sha256 = "sha256-QK1Q6/ta2PqIrjdA6/oS1HxOMgZr/BO00OLjs3/O7EE=";
-          };
-        };
-        synthdid = prev.rPackages.buildRPackage {
-          name = "synthdid";
-          src = prev.fetchFromGitHub {
-            owner = "synth-inference";
-            repo = "synthdid";
-            rev = "70c1ce3eac58e28c30b67435ca377bb48baa9b8a";
-            sha256 = "sha256-rxQqnpKWy4d9ZykRxfILu1lyT6Z3x++gFdC3sbm++pk=";
-          };
-          propagatedBuildInputs = [prev.rPackages.mvtnorm];
-        };
+        ## H
         httpgd = prev.rPackages.buildRPackage {
           name = "httpgd";
           src = prev.fetchgit {
@@ -66,6 +48,19 @@
               ;
           };
         };
+
+        ## M
+        musicMetadata = prev.rPackages.buildRPackage {
+          name = "musicMetadata";
+          src = prev.fetchgit {
+            url = "https://github.com/hannesdatta/musicMetadata";
+            branchName = "master";
+            rev = "1b7ca4c1fd208475e961b77edc90ad513b936879";
+            sha256 = "sha256-QK1Q6/ta2PqIrjdA6/oS1HxOMgZr/BO00OLjs3/O7EE=";
+          };
+        };
+
+        ## N
         nvimcom = prev.rPackages.buildRPackage {
           name = "nvimcom";
           src = inputs.nvimcom;
@@ -77,6 +72,17 @@
           ];
         };
 
+        ## S
+        synthdid = prev.rPackages.buildRPackage {
+          name = "synthdid";
+          src = prev.fetchFromGitHub {
+            owner = "synth-inference";
+            repo = "synthdid";
+            rev = "70c1ce3eac58e28c30b67435ca377bb48baa9b8a";
+            sha256 = "sha256-rxQqnpKWy4d9ZykRxfILu1lyT6Z3x++gFdC3sbm++pk=";
+          };
+          propagatedBuildInputs = [prev.rPackages.mvtnorm];
+        };
         # Template for adding more packages:
         # somepkg = mkGitR {
         #   pname = "somepkg";
@@ -98,7 +104,7 @@
           overlays = [self.overlays.default];
         };
       in {
-        default = pkgs.rWrapper.override {packages = builtins.attrNames pkgs.extraRPackages;};
+        default = pkgs.rWrapper.override {packages = builtins.attrValues pkgs.extraRPackages; };
       }
     );
     # Helpful for overlay users: expose a devShell with R including these pkgs
