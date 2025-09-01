@@ -1,4 +1,4 @@
-name: "Test RDE template"
+name: "Test FRAN"
 on:
   workflow_dispatch: # allows manual triggering
   push:
