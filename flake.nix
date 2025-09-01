@@ -104,7 +104,7 @@
           overlays = [self.overlays.default];
         };
       in {
-        default = pkgs.rWrapper.override {packages = builtins.attrValues pkgs.extraRPackages; };
+        default = pkgs.rWrapper.override {packages = builtins.attrValues pkgs.extraRPackages;};
       }
     );
     # Helpful for overlay users: expose a devShell with R including these pkgs
@@ -116,14 +116,7 @@
     in {
       default = pkgs.mkShell {
         packages = [
-          (pkgs.rWrapper.override {
-            packages = with pkgs.extraRPackages; [
-              nvimcom
-              musicMetadata
-              synthdid
-              httpgd
-            ];
-          })
+          self.packages."${system}".default
         ];
       };
     });
