@@ -28,4 +28,4 @@ jobs:
         extraPullNames: rstats-on-nix, nix-community
     - run: nix build .
     - run: nix flake check . --all-systems
-    - run: nix run -c "R -e 'library(httpgd)'"
+    - run: nix develop -c "R -e 'library(httpgd)'"
