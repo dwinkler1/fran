@@ -93,12 +93,7 @@
         };
       in {
         default = pkgs.rWrapper.override {packages = builtins.attrValues pkgs.extraRPackages;};
-        franUpdate = pkgs.writeShellScriptBin "fran-update" ''
-          pg=${pkgs.nix-prefetch-github}/bin/nix-prefetch-github
-          $pg --json hannesdatta musicMetadata > versions/musicMetadata.json
-          $pg --json nx10 httpgd > versions/httpgd.json
-          $pg --json synth-inference synthdid > versions/synthdid.json
-        '';
+        franUpdate = pkgs.writeShellScriptBin "fran-update" (import ./versions pkgs);
       }
     );
     # Helpful for overlay users: expose a devShell with R including these pkgs
@@ -109,15 +104,10 @@
       };
     in {
       default = pkgs.mkShell {
-        packages = [
-          self.packages."${system}".default
+        packages = with self.packages."${system}"; [
+          default
+          franUpdate
         ];
-      };
-      update = pkgs.mkShell {
-        packages = [self.packages."${system}".franUpdate];
-        shellHook = ''
-          fran-update
-        '';
       };
     });
   };
