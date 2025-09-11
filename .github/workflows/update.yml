@@ -14,6 +14,7 @@ jobs:
       - name: Install Determinate Nix
         uses: DeterminateSystems/determinate-nix-action@v3
       - uses: DeterminateSystems/magic-nix-cache-action@main
+      - run: nix run .#updateFran
       - name: Update n flake.lock
         uses: DeterminateSystems/update-flake-lock@v27
         with:
