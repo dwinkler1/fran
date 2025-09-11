@@ -4,7 +4,7 @@ on:
   push:
     paths:
       - 'flake.lock'
-      - 'versions/*'
+      - 'versions/*.json'
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
