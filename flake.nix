@@ -29,36 +29,34 @@
 
     # The overlay that exposes custom R packages
     overlay = final: prev: let
+      readJSONFile = path: builtins.fromJSON (builtins.readFile path);
     in {
       extraRPackages = {
         ## H
-        httpgd = prev.rPackages.buildRPackage {
-          name = "httpgd";
-          src = prev.fetchgit {
-            url = "https://github.com/nx10/httpgd";
-            rev = "dd6ed3a687a2d7327bb28ca46725a0a203eb2a19";
-            sha256 = "sha256-vs6MTdVJXhTdzPXKqQR+qu1KbhF+vfyzZXIrFsuKMtU=";
+        httpgd = let
+          httpgdLatest = readJSONFile ./versions/httpgd.json;
+        in
+          prev.rPackages.buildRPackage {
+            name = "httpgd";
+            src = prev.fetchFromGitHub httpgdLatest;
+            propagatedBuildInputs = builtins.attrValues {
+              inherit
+                (prev.rPackages)
+                unigd
+                cpp11
+                AsioHeaders
+                ;
+            };
           };
-          propagatedBuildInputs = builtins.attrValues {
-            inherit
-              (prev.rPackages)
-              unigd
-              cpp11
-              AsioHeaders
-              ;
-          };
-        };
 
         ## M
-        musicMetadata = prev.rPackages.buildRPackage {
-          name = "musicMetadata";
-          src = prev.fetchgit {
-            url = "https://github.com/hannesdatta/musicMetadata";
-            branchName = "master";
-            rev = "1b7ca4c1fd208475e961b77edc90ad513b936879";
-            sha256 = "sha256-QK1Q6/ta2PqIrjdA6/oS1HxOMgZr/BO00OLjs3/O7EE=";
+        musicMetadata = let
+          musicMetadataLatest = readJSONFile ./versions/musicMetadata.json;
+        in
+          prev.rPackages.buildRPackage {
+            name = "musicMetadata";
+            src = prev.fetchFromGitHub musicMetadataLatest;
           };
-        };
 
         ## N
         nvimcom = prev.rPackages.buildRPackage {
@@ -73,16 +71,14 @@
         };
 
         ## S
-        synthdid = prev.rPackages.buildRPackage {
-          name = "synthdid";
-          src = prev.fetchFromGitHub {
-            owner = "synth-inference";
-            repo = "synthdid";
-            rev = "70c1ce3eac58e28c30b67435ca377bb48baa9b8a";
-            sha256 = "sha256-rxQqnpKWy4d9ZykRxfILu1lyT6Z3x++gFdC3sbm++pk=";
+        synthdid = let
+          synthdidLatest = readJSONFile ./versions/synthdid.json;
+        in
+          prev.rPackages.buildRPackage {
+            name = "synthdid";
+            src = prev.fetchFromGitHub synthdidLatest;
+            propagatedBuildInputs = [prev.rPackages.mvtnorm];
           };
-          propagatedBuildInputs = [prev.rPackages.mvtnorm];
-        };
       };
     };
   in {
@@ -97,6 +93,12 @@
         };
       in {
         default = pkgs.rWrapper.override {packages = builtins.attrValues pkgs.extraRPackages;};
+        franUpdate = pkgs.writeShellScriptBin "fran-update" ''
+          pg=${pkgs.nix-prefetch-github}/bin/nix-prefetch-github
+          $pg --json hannesdatta musicMetadata > versions/musicMetadata.json
+          $pg --json nx10 httpgd > versions/httpgd.json
+          $pg --json synth-inference synthdid > versions/synthdid.json
+        '';
       }
     );
     # Helpful for overlay users: expose a devShell with R including these pkgs
@@ -110,6 +112,12 @@
         packages = [
           self.packages."${system}".default
         ];
+      };
+      update = pkgs.mkShell {
+        packages = [self.packages."${system}".franUpdate];
+        shellHook = ''
+          fran-update
+        '';
       };
     });
   };
