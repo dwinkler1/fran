@@ -83,7 +83,6 @@
           };
           propagatedBuildInputs = [prev.rPackages.mvtnorm];
         };
-        
       };
     };
   in {
