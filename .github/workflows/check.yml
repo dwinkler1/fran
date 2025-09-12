@@ -5,6 +5,7 @@ on:
     paths:
       - 'flake.lock'
       - 'versions/*.json'
+      - '.github/workflows/*.yml'
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -16,7 +17,7 @@ jobs:
         os: [ubuntu-latest]
     steps:
     - uses: actions/checkout@v5
-    - uses: DeterminateSystems/nix-installer-action@20
+    - uses: DeterminateSystems/nix-installer-action@3
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
     - uses: cachix/cachix-action@v16
@@ -34,7 +35,7 @@ jobs:
         os: [macos-latest]
     steps:
     - uses: actions/checkout@v5
-    - uses: DeterminateSystems/nix-installer-action@20
+    - uses: DeterminateSystems/nix-installer-action@3
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
     - uses: cachix/cachix-action@v16
