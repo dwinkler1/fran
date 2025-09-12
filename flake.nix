@@ -115,6 +115,7 @@
       };
     };
   in {
+    lib = {inherit mkR;};
     # For imports in other flakes
     overlays.default = overlay;
 
