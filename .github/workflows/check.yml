@@ -17,7 +17,7 @@ jobs:
         os: [ubuntu-latest]
     steps:
     - uses: actions/checkout@v5
-    - uses: DeterminateSystems/nix-installer-action@3
+    - uses: DeterminateSystems/nix-installer-action@main
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
     - uses: cachix/cachix-action@v16
@@ -35,7 +35,7 @@ jobs:
         os: [macos-latest]
     steps:
     - uses: actions/checkout@v5
-    - uses: DeterminateSystems/nix-installer-action@3
+    - uses: DeterminateSystems/nix-installer-action@main
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
     - uses: cachix/cachix-action@v16
