@@ -22,6 +22,23 @@
     ];
     forAllSystems = nixpkgs.lib.genAttrs systems;
 
+    mkR = {
+      pkgs,
+      packages,
+    }: let
+      juliaPackages = builtins.concatMap (p: (p.passthru or {}).juliaPackages or []) packages;
+    in
+      pkgs.buildEnv {
+        name = "rWithDependencies";
+        paths =
+          [
+            (pkgs.rWrapper.override {inherit packages;})
+          ]
+          ++ (pkgs.lib.optionals (builtins.length juliaPackages > 0) [
+            (pkgs.julia-bin.withPackages juliaPackages)
+          ]);
+      };
+
     # The overlay that exposes custom R packages
     overlay = final: prev: {
       extraRPackageDeps = {
@@ -31,28 +48,31 @@
         fetchfromGitHubJSONFile = path: prev.fetchFromGitHub (builtins.fromJSON (builtins.readFile path));
       in {
         ## F
-        fwildclusterboot = prev.rPackages.buildRPackage {
-          name = "fwildclusterboot";
-          src = fetchfromGitHubJSONFile ./versions/fwildclusterboot.json;
-          propagatedBuildInputs = builtins.attrValues {
-            inherit
-              (prev.rPackages)
-              collapse
-              dqrng
-              dreamerr
-              Formula
-              generics
-              gtools
-              JuliaConnectoR
-              Matrix
-              Rcpp
-              rlang
-              summclust
-              RcppArmadillo
-              RcppEigen
-              ;
-          };
-        };
+        fwildclusterboot =
+          (prev.rPackages.buildRPackage {
+            name = "fwildclusterboot";
+            src = fetchfromGitHubJSONFile ./versions/fwildclusterboot.json;
+            propagatedBuildInputs = builtins.attrValues {
+              inherit
+                (prev.rPackages)
+                collapse
+                dqrng
+                dreamerr
+                Formula
+                generics
+                gtools
+                JuliaConnectoR
+                Matrix
+                Rcpp
+                rlang
+                summclust
+                RcppArmadillo
+                RcppEigen
+                ;
+            };
+          }).overrideAttrs (old: {
+            passthru = (old.passthru or {}) // {juliaPackages = ["WildBootTests" "StableRNGs"];};
+          });
 
         ## H
         httpgd = prev.rPackages.buildRPackage {
@@ -106,7 +126,10 @@
           overlays = [self.overlays.default];
         };
       in {
-        default = pkgs.rWrapper.override {packages = builtins.attrValues pkgs.extraRPackages;};
+        default = mkR {
+          inherit pkgs;
+          packages = builtins.attrValues pkgs.extraRPackages;
+        };
         franUpdate = pkgs.writeShellScriptBin "fran-update" (import ./versions pkgs);
       }
     );
@@ -121,7 +144,6 @@
         default = pkgs.mkShell {
           packages = with self.packages."${system}"; [
             default
-            pkgs.extraRPackageDeps.julia-fwildclusterboot
             franUpdate
           ];
         };
