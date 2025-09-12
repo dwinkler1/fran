@@ -115,7 +115,9 @@
       };
     };
   in {
+    # Helper to install R with system dependencies if required
     lib = {inherit mkR;};
+
     # For imports in other flakes
     overlays.default = overlay;
 
