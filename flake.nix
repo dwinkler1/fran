@@ -24,6 +24,9 @@
 
     # The overlay that exposes custom R packages
     overlay = final: prev: {
+      extraRPackageDeps = {
+        julia-fwildclusterboot = prev.julia-bin.withPackages ["WildBootTests" "StableRNGs"];
+      };
       extraRPackages = let
         fetchfromGitHubJSONFile = path: prev.fetchFromGitHub (builtins.fromJSON (builtins.readFile path));
       in {
@@ -31,26 +34,24 @@
         fwildclusterboot = prev.rPackages.buildRPackage {
           name = "fwildclusterboot";
           src = fetchfromGitHubJSONFile ./versions/fwildclusterboot.json;
-          propagatedBuildInputs =
-            builtins.attrValues {
-              inherit
-                (prev.rPackages)
-                collapse
-                dqrng
-                dreamerr
-                Formula
-                generics
-                gtools
-                JuliaConnectoR
-                Matrix
-                Rcpp
-                rlang
-                summclust
-                RcppArmadillo
-                RcppEigen
-                ;
-            }
-            ++ [(prev.julia-bin.withPackages ["WildBootTests"])];
+          propagatedBuildInputs = builtins.attrValues {
+            inherit
+              (prev.rPackages)
+              collapse
+              dqrng
+              dreamerr
+              Formula
+              generics
+              gtools
+              JuliaConnectoR
+              Matrix
+              Rcpp
+              rlang
+              summclust
+              RcppArmadillo
+              RcppEigen
+              ;
+          };
         };
 
         ## H
@@ -120,6 +121,7 @@
         default = pkgs.mkShell {
           packages = with self.packages."${system}"; [
             default
+            pkgs.extraRPackageDeps.julia-fwildclusterboot
             franUpdate
           ];
         };
