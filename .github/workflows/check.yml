@@ -13,15 +13,12 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest]
+        os: [ubuntu-latest macos-latest macos-26]
     steps:
     - uses: actions/checkout@v5
-    - uses: wimpysworld/nothing-but-nix@main
+    - uses: DeterminateSystems/nix-installer-action@20
       with:
-        hatchet-protocol: 'carve'
-    - uses: cachix/install-nix-action@v31
-      with:
-        github_access_token: ${{ secrets.GITHUB_TOKEN }}
+        github-token: ${{ secrets.GITHUB_TOKEN }}
     - uses: cachix/cachix-action@v16
       with:
         name: rde
