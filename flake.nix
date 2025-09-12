@@ -20,43 +20,32 @@
       "x86_64-darwin"
       "aarch64-darwin"
     ];
-    forAllSystems = f:
-      builtins.listToAttrs (map (system: {
-          name = system;
-          value = f system;
-        })
-        systems);
+    forAllSystems = nixpkgs.lib.genAttrs systems;
 
     # The overlay that exposes custom R packages
-    overlay = final: prev: let
-      readJSONFile = path: builtins.fromJSON (builtins.readFile path);
-    in {
-      extraRPackages = {
+    overlay = final: prev: {
+      extraRPackages = let
+        fetchfromGitHubJSONFile = path: prev.fetchFromGitHub (builtins.fromJSON (builtins.readFile path));
+      in {
         ## H
-        httpgd = let
-          httpgdLatest = readJSONFile ./versions/httpgd.json;
-        in
-          prev.rPackages.buildRPackage {
-            name = "httpgd";
-            src = prev.fetchFromGitHub httpgdLatest;
-            propagatedBuildInputs = builtins.attrValues {
-              inherit
-                (prev.rPackages)
-                unigd
-                cpp11
-                AsioHeaders
-                ;
-            };
+        httpgd = prev.rPackages.buildRPackage {
+          name = "httpgd";
+          src = fetchfromGitHubJSONFile ./versions/httpgd.json;
+          propagatedBuildInputs = builtins.attrValues {
+            inherit
+              (prev.rPackages)
+              unigd
+              cpp11
+              AsioHeaders
+              ;
           };
+        };
 
         ## M
-        musicMetadata = let
-          musicMetadataLatest = readJSONFile ./versions/musicMetadata.json;
-        in
-          prev.rPackages.buildRPackage {
-            name = "musicMetadata";
-            src = prev.fetchFromGitHub musicMetadataLatest;
-          };
+        musicMetadata = prev.rPackages.buildRPackage {
+          name = "musicMetadata";
+          src = fetchfromGitHubJSONFile ./versions/musicMetadata.json;
+        };
 
         ## N
         nvimcom = prev.rPackages.buildRPackage {
@@ -71,20 +60,18 @@
         };
 
         ## S
-        synthdid = let
-          synthdidLatest = readJSONFile ./versions/synthdid.json;
-        in
-          prev.rPackages.buildRPackage {
-            name = "synthdid";
-            src = prev.fetchFromGitHub synthdidLatest;
-            propagatedBuildInputs = [prev.rPackages.mvtnorm];
-          };
+        synthdid = prev.rPackages.buildRPackage {
+          name = "synthdid";
+          src = fetchfromGitHubJSONFile ./versions/synthdid.json;
+          propagatedBuildInputs = [prev.rPackages.mvtnorm];
+        };
       };
     };
   in {
+    # For imports in other flakes
     overlays.default = overlay;
 
-    # Optional: provide an R wrapper with these non-CRAN packages bundled
+    # run these with `nix run .#NAME`
     packages = forAllSystems (
       system: let
         pkgs = import nixpkgs {
@@ -96,20 +83,22 @@
         franUpdate = pkgs.writeShellScriptBin "fran-update" (import ./versions pkgs);
       }
     );
-    # Helpful for overlay users: expose a devShell with R including these pkgs
-    devShells = forAllSystems (system: let
-      pkgs = import nixpkgs {
-        inherit system;
-        overlays = [self.overlays.default];
-      };
-    in {
-      default = pkgs.mkShell {
-        packages = with self.packages."${system}"; [
-          default
-          franUpdate
-        ];
-      };
-    });
+    # Run this with `nix develop`
+    devShells = forAllSystems (
+      system: let
+        pkgs = import nixpkgs {
+          inherit system;
+          overlays = [self.overlays.default];
+        };
+      in {
+        default = pkgs.mkShell {
+          packages = with self.packages."${system}"; [
+            default
+            franUpdate
+          ];
+        };
+      }
+    );
   };
   nixConfig = {
     extra-substituters = [
