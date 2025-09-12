@@ -27,28 +27,30 @@
       extraRPackages = let
         fetchfromGitHubJSONFile = path: prev.fetchFromGitHub (builtins.fromJSON (builtins.readFile path));
       in {
-        ## f
+        ## F
         fwildclusterboot = prev.rPackages.buildRPackage {
           name = "fwildclusterboot";
           src = fetchfromGitHubJSONFile ./versions/fwildclusterboot.json;
-          propagatedBuildInputs = builtins.attrValues {
-            inherit
-              (prev.rPackages)
-              collapse
-              dqrng
-              dreamerr
-              Formula
-              generics
-              gtools
-              JuliaConnectoR
-              Matrix
-              Rcpp
-              rlang
-              summclust
-              RcppArmadillo
-              RcppEigen
-              ;
-          };
+          propagatedBuildInputs =
+            builtins.attrValues {
+              inherit
+                (prev.rPackages)
+                collapse
+                dqrng
+                dreamerr
+                Formula
+                generics
+                gtools
+                JuliaConnectoR
+                Matrix
+                Rcpp
+                rlang
+                summclust
+                RcppArmadillo
+                RcppEigen
+                ;
+            }
+            ++ [(prev.julia-bin.withPackages ["WildBootTests"])];
         };
 
         ## H

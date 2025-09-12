@@ -12,7 +12,23 @@ boot_lm <- boottest(
   param = "treatment",
   B = 999
 )
+boot_lmjl <- boottest(
+  lm_fit,
+  clustid = "group_id1",
+  param = "treatment",
+  B = 999,
+  engine = "WildBootTests.jl"
+)
+setBoottest_engine("WildBootTests.jl")
+boot_lmjl2 <- boottest(
+  lm_fit, 
+  clustid = "group_id1",
+  param = "treatment",
+  B = 999
+)
 summary(boot_lm)
+summary(boot_lmjl)
+summary(boot_lmjl2)
 
 cat("\n============================================================ httpgd ============================================================\n")
 library(httpgd)
