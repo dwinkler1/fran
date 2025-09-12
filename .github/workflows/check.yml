@@ -6,6 +6,7 @@ on:
       - 'flake.lock'
       - 'versions/*.json'
       - '.github/workflows/*.yml'
+      - 'test/*.R'
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
