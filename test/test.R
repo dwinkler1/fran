@@ -16,10 +16,10 @@ boot_lmjl <- boottest(
   lm_fit,
   clustid = "group_id1",
   param = "treatment",
-  B = 999,
-  engine = "WildBootTests.jl"
+  B = 999#,
+#  engine = "WildBootTests.jl"
 )
-setBoottest_engine("WildBootTests.jl")
+#setBoottest_engine("WildBootTests.jl")
 boot_lmjl2 <- boottest(
   lm_fit, 
   clustid = "group_id1",
