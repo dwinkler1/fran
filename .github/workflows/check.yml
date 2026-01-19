@@ -4,7 +4,9 @@ on:
   push:
     paths:
       - 'flake.lock'
+      - 'flake.nix'
       - 'versions/*.json'
+      - 'packages/**/*.nix'
       - '.github/workflows/*.yml'
       - 'test/*.R'
 concurrency:
