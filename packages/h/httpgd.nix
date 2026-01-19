@@ -1,4 +1,5 @@
 {
+  final,
   prev,
   fetchfromGitHubJSONFile,
   versionsDir,
