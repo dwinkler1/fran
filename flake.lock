@@ -2,40 +2,23 @@
   "nodes": {
     "nixpkgs": {
       "locked": {
-        "lastModified": 1761180068,
-        "narHash": "sha256-6/Z0navtnd+duYqZ0L9vk2dAavsiMj+UgKRPp0NQ/2M=",
+        "lastModified": 1762778295,
+        "narHash": "sha256-5Ogu11rMpc3ytcfBLwO3O1l1MJl0pTT+uCz/OJixmVo=",
         "owner": "rstats-on-nix",
         "repo": "nixpkgs",
-        "rev": "41adefaa04626b6bc98ffcfdbf821f37bf4aa964",
+        "rev": "b37b5950aa970ed7abe27144f2ca62e6029215e5",
         "type": "github"
       },
       "original": {
         "owner": "rstats-on-nix",
-        "ref": "r-daily",
+        "ref": "2025-11-10",
         "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
-    "nvimcom": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1760650130,
-        "narHash": "sha256-KgvK2tR6C97Z1WEUbVNHzAe6QKUg0T5FLB9HwO3eay4=",
-        "owner": "R-nvim",
-        "repo": "R.nvim",
-        "rev": "fef990378e4b5157f23314dca4136bc0079cc2c4",
-        "type": "github"
-      },
-      "original": {
-        "owner": "R-nvim",
-        "repo": "R.nvim",
         "type": "github"
       }
     },
     "root": {
       "inputs": {
-        "nixpkgs": "nixpkgs",
-        "nvimcom": "nvimcom"
+        "nixpkgs": "nixpkgs"
       }
     }
   },

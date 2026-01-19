@@ -2,11 +2,7 @@
   description = "FRAN - The Flakey R Archiving Network";
 
   inputs = {
-    nixpkgs.url = "github:rstats-on-nix/nixpkgs/r-daily";
-    nvimcom = {
-      url = "github:R-nvim/R.nvim";
-      flake = false;
-    };
+    nixpkgs.url = "github:rstats-on-nix/nixpkgs/2025-11-10";
   };
 
   outputs = {
@@ -65,10 +61,10 @@
                 Matrix
                 Rcpp
                 rlang
-                summclust
                 RcppArmadillo
                 RcppEigen
-                ;
+               ;
+              inherit (final.extraRPackages) summclust;
             };
           }).overrideAttrs (old: {
             passthru = (old.passthru or {}) // {juliaPackages = ["WildBootTests" "StableRNGs"];};
@@ -95,18 +91,26 @@
         };
 
         ## N
-        nvimcom = prev.rPackages.buildRPackage {
-          name = "nvimcom";
-          src = inputs.nvimcom;
-          sourceRoot = "source/nvimcom";
-          buildInputs = with prev; [
-            R
-            stdenv.cc.cc
-            gnumake
-          ];
-        };
 
         ## S
+        summclust = prev.rPackages.buildRPackage {
+          name = "summclust";
+
+          src = fetchfromGitHubJSONFile ./versions/summclust.json;
+
+          propagatedBuildInputs = builtins.attrValues {
+            inherit
+              (prev.rPackages)
+            dreamerr
+            MASS
+            collapse
+            generics
+            cli
+            rlang
+            ;
+          };
+        };
+
         synthdid = prev.rPackages.buildRPackage {
           name = "synthdid";
           src = fetchfromGitHubJSONFile ./versions/synthdid.json;
@@ -147,6 +151,11 @@
         default = pkgs.mkShell {
           packages = with self.packages."${system}"; [
             default
+            franUpdate
+          ];
+        };
+        newPkg = pkgs.mkShell {
+          packages = with self.packages."${system}"; [
             franUpdate
           ];
         };
