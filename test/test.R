@@ -38,9 +38,6 @@ cat("\n============================================================ musicMetadat
 library(musicMetadata)
 print(classify_labels('Interscope'))
 
-cat("\n============================================================ nvimcom ============================================================\n")
-library(nvimcom)
-
 cat("\n============================================================ summclust ============================================================\n")
 library(summclust)
 summclust(lm_fit, cluster = ~group_id1, params = "treatment")

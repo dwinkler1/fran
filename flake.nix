@@ -90,8 +90,6 @@
           src = fetchfromGitHubJSONFile ./versions/musicMetadata.json;
         };
 
-        ## N
-
         ## S
         summclust = prev.rPackages.buildRPackage {
           name = "summclust";
@@ -151,11 +149,6 @@
         default = pkgs.mkShell {
           packages = with self.packages."${system}"; [
             default
-            franUpdate
-          ];
-        };
-        newPkg = pkgs.mkShell {
-          packages = with self.packages."${system}"; [
             franUpdate
           ];
         };
