@@ -9,21 +9,26 @@ let
   # Reference to the versions directory at the repo root
   versionsDir = ../versions;
   
-  # Common arguments passed to all package modules
-  commonArgs = {
-    inherit final prev fetchfromGitHubJSONFile versionsDir;
+  # Common arguments passed to package modules that don't need 'final'
+  baseArgs = {
+    inherit prev fetchfromGitHubJSONFile versionsDir;
+  };
+  
+  # Arguments for packages that need access to 'final' (for cross-package dependencies)
+  argsWithFinal = baseArgs // {
+    inherit final;
   };
 in {
   ## F
-  fwildclusterboot = import ./f/fwildclusterboot.nix commonArgs;
+  fwildclusterboot = import ./f/fwildclusterboot.nix argsWithFinal;
   
   ## H
-  httpgd = import ./h/httpgd.nix commonArgs;
+  httpgd = import ./h/httpgd.nix baseArgs;
   
   ## M
-  musicMetadata = import ./m/musicMetadata.nix commonArgs;
+  musicMetadata = import ./m/musicMetadata.nix baseArgs;
   
   ## S
-  summclust = import ./s/summclust.nix commonArgs;
-  synthdid = import ./s/synthdid.nix commonArgs;
+  summclust = import ./s/summclust.nix baseArgs;
+  synthdid = import ./s/synthdid.nix baseArgs;
 }
