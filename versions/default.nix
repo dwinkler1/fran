@@ -1,5 +1,6 @@
 pkgs: ''
   pg=${pkgs.nix-prefetch-github}/bin/nix-prefetch-github
+  $pg --json grantmcdermott jgd > versions/jgd.json
   $pg --json hannesdatta musicMetadata > versions/musicMetadata.json
   $pg --json nx10 httpgd > versions/httpgd.json
   $pg --json s3alfisc fwildclusterboot > versions/fwildclusterboot.json

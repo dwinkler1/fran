@@ -1,13 +1,17 @@
 cat("Testing\n")
+cat("\n============================================================ jgd =========================================================================\n")
+library(jgd)
+jgd()
+
 cat("\n============================================================ fwildclusterboot ============================================================\n")
 library(fwildclusterboot)
 data(voters)
 lm_fit <- lm(
-  proposition_vote ~ treatment + ideology1 + log_income + Q1_immigration , 
+  proposition_vote ~ treatment + ideology1 + log_income + Q1_immigration ,
   data = voters
 )
 boot_lm <- boottest(
-  lm_fit, 
+  lm_fit,
   clustid = "group_id1",
   param = "treatment",
   B = 999
@@ -21,7 +25,7 @@ boot_lmjl <- boottest(
 )
 #setBoottest_engine("WildBootTests.jl")
 boot_lmjl2 <- boottest(
-  lm_fit, 
+  lm_fit,
   clustid = "group_id1",
   param = "treatment",
   B = 999

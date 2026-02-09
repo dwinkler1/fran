@@ -78,9 +78,34 @@
             franUpdate
           ];
         };
+        newpkg = pkgs.mkShell {
+          nativeBuildInputs = [
+            pkgs.nix-prefetch-github
+          ];
+        };
+      }
+    );
+
+    checks = forAllSystems (
+      system: let
+        pkgs = import nixpkgs {
+          inherit system;
+          overlays = [self.overlays.default];
+        };
+        rEnv = mkR {
+          inherit pkgs;
+          packages = builtins.attrValues pkgs.extraRPackages;
+        };
+      in {
+        test-script = pkgs.runCommand "test-script" {} ''
+          mkdir -p $out
+          cp ${./test/test.R} test.R
+          ${rEnv}/bin/Rscript test.R > $out/result.log
+        '';
       }
     );
   };
+
   nixConfig = {
     extra-substituters = [
       "https://rstats-on-nix.cachix.org"
