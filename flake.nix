@@ -2,7 +2,7 @@
   description = "FRAN - The Flakey R Archiving Network";
 
   inputs = {
-    nixpkgs.url = "github:rstats-on-nix/nixpkgs/2026-02-02";
+    nixpkgs.url = "github:rstats-on-nix/nixpkgs/2026-02-16";
   };
 
   outputs = {
