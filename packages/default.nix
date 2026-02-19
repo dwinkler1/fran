@@ -23,9 +23,6 @@ in {
   ## F
   fwildclusterboot = import ./f/fwildclusterboot.nix argsWithFinal;
 
-  ## H
-  httpgd = import ./h/httpgd.nix baseArgs;
-
   ## J
   jgd = import ./j/jgd.nix (baseArgs // {lib = prev.lib;});
 
