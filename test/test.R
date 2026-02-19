@@ -34,10 +34,6 @@ summary(boot_lm)
 summary(boot_lmjl)
 summary(boot_lmjl2)
 
-cat("\n============================================================ httpgd ============================================================\n")
-library(httpgd)
-hgd()
-
 cat("\n============================================================ musicMetadata ============================================================\n")
 library(musicMetadata)
 print(classify_labels('Interscope'))
