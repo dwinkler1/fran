@@ -37,10 +37,10 @@
 
     # The overlay that exposes custom R packages
     overlay = final: prev: {
-      extraRPackageDeps = {
+      franPackageDeps = {
         julia-fwildclusterboot = prev.julia-bin.withPackages ["WildBootTests" "StableRNGs"];
       };
-      extraRPackages = import ./packages {inherit final prev;};
+      franPackages = import ./packages {inherit final prev;};
     };
   in {
     # Helper to install R with system dependencies if required
