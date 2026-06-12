@@ -59,7 +59,7 @@
       in {
         default = mkR {
           inherit pkgs;
-          packages = builtins.attrValues pkgs.extraRPackages;
+          packages = builtins.attrValues pkgs.franPackages;
         };
         franUpdate = pkgs.writeShellScriptBin "fran-update" (import ./versions pkgs);
       }
