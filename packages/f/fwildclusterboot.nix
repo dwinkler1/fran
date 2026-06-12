@@ -23,7 +23,7 @@
       RcppArmadillo
       RcppEigen
       ;
-    inherit (final.extraRPackages) summclust;
+    inherit (final.franPackages) summclust;
   };
 }).overrideAttrs (old: {
   passthru = (old.passthru or {}) // {juliaPackages = ["WildBootTests" "StableRNGs"];};
