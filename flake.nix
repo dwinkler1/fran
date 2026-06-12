@@ -94,7 +94,7 @@
         };
         rEnv = mkR {
           inherit pkgs;
-          packages = builtins.attrValues pkgs.extraRPackages;
+          packages = builtins.attrValues pkgs.franPackages;
         };
       in {
         test-script = pkgs.runCommand "test-script" {} ''
