@@ -27,7 +27,7 @@ Based on [the-nix-way](https://github.com/the-nix-way/dev-templates)
         packages = with pkgs; [
           (mkR {
             inherit pkgs;
-            packages = [rPackages.data_table extraRPackages.fwildclusterboot];
+            packages = [rPackages.data_table franPackages.fwildclusterboot];
           })
         ];
       };
