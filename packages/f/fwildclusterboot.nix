@@ -5,6 +5,7 @@
   versionsDir,
 }:
 (prev.rPackages.buildRPackage {
+  pname = "fwildclusterboot";
   name = "fwildclusterboot";
   src = fetchfromGitHubJSONFile "${versionsDir}/fwildclusterboot.json";
   propagatedBuildInputs = builtins.attrValues {

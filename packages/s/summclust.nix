@@ -4,6 +4,7 @@
   versionsDir,
 }:
 prev.rPackages.buildRPackage {
+  pname = "summclust";
   name = "summclust";
   src = fetchfromGitHubJSONFile "${versionsDir}/summclust.json";
   propagatedBuildInputs = builtins.attrValues {
