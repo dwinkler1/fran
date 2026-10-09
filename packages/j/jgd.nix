@@ -16,6 +16,7 @@
   };
 in
   prev.rPackages.buildRPackage {
+    pname = "jgd";
     name = "jgd";
     src = rPkgSrc;
     sourceRoot = "source/r-pkg";
